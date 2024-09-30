@@ -44,6 +44,7 @@ class GAMERIG_OT_create_target(bpy.types.Operator):
                     target_rig=target_rig,
                     source_bone_name=retarget.name,
                     target_bone_name=retarget.bone_target_name,
+                    use_deform=retarget.use_deform,
                 )
                 retarget.override_bone = new_bone.name
                 pass
