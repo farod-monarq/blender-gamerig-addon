@@ -1,9 +1,8 @@
 import bpy
-from ..properties.gamerig import GAMERIG_PG_game_rig
 
-class GAMERIG_OT_bone_list_context_menu(bpy.types.Operator):
-    bl_idname = "gamerig.bone_list_context_menu"
-    bl_label = "Add Bone"
+class GAMERIG_OT_apply_bone_naming_convention(bpy.types.Operator):
+    bl_idname = "gamerig.apply_bone_naming_convention"
+    bl_label = "Template Rename"
 
     @classmethod
     def poll(cls, context):
