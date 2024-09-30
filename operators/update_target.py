@@ -59,6 +59,7 @@ class GAMERIG_OT_update_target(bpy.types.Operator):
                         target_rig=target_rig,
                         source_bone_name=retarget.name,
                         target_bone_name=retarget.bone_target_name,
+                        use_deform=retarget.use_deform
                     )
                     pass
                 new_bone.name = retarget.bone_target_name
@@ -67,7 +68,7 @@ class GAMERIG_OT_update_target(bpy.types.Operator):
                 retarget.bone_target_name = new_bone.name
 
                 # appliquer les transforms
-                apply_bone_transform(armature.edit_bones[retarget.name], new_bone)
+                apply_bone_transform(armature.edit_bones[retarget.name], new_bone, retarget.use_deform)
                 pass
 
             # reparenter les bones
