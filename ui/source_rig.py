@@ -1,6 +1,6 @@
 from cgitb import text
 import bpy
-from ..properties.gamerig import GAMERIG_PG_bone_retarget, GAMERIG_PG_game_rig
+from ..properties.gamerig import GAMERIG_PG_game_rig
 
 
 def register():
@@ -33,22 +33,25 @@ class GAMERIG_PT_source_rig_panel(bpy.types.Panel):
         rig_object: GAMERIG_PG_game_rig,
     ):
         gamerig = rig_object.data.gamerig
-
-        active_collection_row = layout.row()
-        active_collection_row.label(text="Bones", icon="BONE_DATA")
-        row_list = layout.row()
-        row_list.template_list(
-            "GAMERIG_PT_bone_retarget_list",
-            "",
-            gamerig,
-            "bones",
-            gamerig,
-            "active_bone",
-        )
-        col_list_action = row_list.column()
-        col_list_action.operator("gamerig.add_bone", text="", icon="ADD")
-        col_list_action.operator("gamerig.remove_bone", text="", icon="REMOVE")
-        col_list_action.operator("gamerig.remove_bone", text="", icon="DOWNARROW_HLT")
+        collection_header, collection_layout = layout.panel("gamerig.retargets")
+        collection_header.label(text="Bones")
+        if collection_layout:
+            row_list = collection_layout.row()
+            row_list.template_list(
+                "GAMERIG_UL_bone_retarget_list",
+                "",
+                gamerig,
+                "bones",
+                gamerig,
+                "active_bone",
+            )
+            col_list_action = row_list.column()
+            col_list_action.operator("gamerig.add_bone_target", text="", icon="ADD")
+            col_list_action.operator("gamerig.remove_bone", text="", icon="REMOVE")
+            # col_list_action.operator(
+            # 	"gamerig.", text="", icon="DOWNARROW_HLT"
+            # )
+            pass
         return
 
     def _draw_bone_collections(self, context, layout):
@@ -56,7 +59,7 @@ class GAMERIG_PT_source_rig_panel(bpy.types.Panel):
         collection_header.label(text="Bone Collections")
         if collection_layout:
             collection_layout.template_list(
-                "GAMERIG_PT_bone_collection_list",
+                "GAMERIG_UL_bone_collection_list",
                 "",
                 context.object.data,
                 "collections",
@@ -74,6 +77,9 @@ class GAMERIG_PT_source_rig_panel(bpy.types.Panel):
         if not (context.object or context.object.type == "ARMATURE"):
             return
 
+        if context.object.data.gamerig_owner:
+            return
+
         layout = self.layout
         armature = context.object.data
 
@@ -83,12 +89,16 @@ class GAMERIG_PT_source_rig_panel(bpy.types.Panel):
         self._draw_retarget_list(
             context=context, layout=layout, rig_object=context.object
         )
+        row = layout.row()
 
         if gamerig.target_rig:
+            row.operator("gamerig.update_target", icon="ARMATURE_DATA")
             pass
         else:
-            layout.operator("gamerig.create_target", icon="ARMATURE_DATA")
+            row.operator("gamerig.create_target", icon="ARMATURE_DATA")
             pass
+
+        row.operator("gamerig.remove_bones_prefix", text="", icon="TEXT")
 
         layout.prop_search(
             gamerig, "target_rig", bpy.data, "objects", text="", icon="CON_ARMATURE"
@@ -96,7 +106,7 @@ class GAMERIG_PT_source_rig_panel(bpy.types.Panel):
         return
 
 
-class GAMERIG_PT_bone_retarget_list(bpy.types.UIList):
+class GAMERIG_UL_bone_retarget_list(bpy.types.UIList):
     def draw_item(
         self, context, layout, data, item, icon, active_data, active_propname, index
     ):
@@ -106,14 +116,13 @@ class GAMERIG_PT_bone_retarget_list(bpy.types.UIList):
         armature = context.object.data
         if self.layout_type in {"DEFAULT", "COMPACT"}:
             row = layout.row()
-            row.prop(
-                item,
-                "use_bone",
-                icon="CHECKBOX_HLT" if item.use_bone else "CHECKBOX_DEHLT",
-                emboss=False,
+
+            row.label(
                 text="",
+                icon="BONE_DATA" if item.name in armature.bones else "ERROR",
             )
             row.label(text=f"{item.name}", icon="NONE")
+            row.label(text="", icon="TRIA_RIGHT")
             if active_data.target_rig:
                 row.prop_search(
                     item, "override_bone", active_data.target_rig.data, "bones", text=""
@@ -121,7 +130,15 @@ class GAMERIG_PT_bone_retarget_list(bpy.types.UIList):
             else:
                 row.label(text=f"{item.bone_target_name}", icon="LINKED")
                 pass
-            row.prop(item, "bone_target_name", text="", icon="TAG")
+            row.label(text="", icon="TAG")
+            row.prop(item, "bone_target_name", text="")
+            row.prop(
+                item,
+                "use_deform",
+                icon="MOD_VERTEX_WEIGHT" if item.use_deform else "RADIOBUT_OFF",
+                emboss=False,
+                text="",
+            )
             row.prop(
                 item,
                 "constraint",
@@ -129,6 +146,7 @@ class GAMERIG_PT_bone_retarget_list(bpy.types.UIList):
                 emboss=False,
                 text="",
             )
+
             pass
         elif self.layout_type == "GRID":
             row.alignment = "CENTER"
@@ -137,7 +155,7 @@ class GAMERIG_PT_bone_retarget_list(bpy.types.UIList):
         return
 
 
-class GAMERIG_PT_bone_collection_list(bpy.types.UIList):
+class GAMERIG_UL_bone_collection_list(bpy.types.UIList):
 
     def draw_item(
         self, context, layout, data, item, icon, active_data, active_propname, index

@@ -6,15 +6,6 @@ class GAMERIG_OT_unassign_collection_bones(bpy.types.Operator):
     bl_idname = "gamerig.unassign_collection_bones"
     bl_label = "Assign"
 
-    action: bpy.props.EnumProperty(
-        name="Action",
-        description="Choose an action",
-        items=[
-            ("OPT_ASSIGN", "Assign", "Assign bones to Target"),
-            ("OPT_REMOVE", "Remove", "Remove bones from Target"),
-        ],
-    )
-
     @classmethod
     def poll(cls, context):
         return context.object and context.object.type == "ARMATURE"

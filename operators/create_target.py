@@ -5,7 +5,7 @@ from ..properties.gamerig import GAMERIG_PG_game_rig
 
 class GAMERIG_OT_create_target(bpy.types.Operator):
     bl_idname = "gamerig.create_target"
-    bl_label = "Create Target"
+    bl_label = "Generate Target"
 
     @classmethod
     def poll(cls, context):

@@ -1,5 +1,5 @@
 import bpy
-from ..properties.gamerig import GAMERIG_PG_bone_retarget, GAMERIG_PG_game_rig
+from ..properties.gamerig import GAMERIG_PG_game_rig
 
 
 class GAMERIG_OT_remove_bone(bpy.types.Operator):

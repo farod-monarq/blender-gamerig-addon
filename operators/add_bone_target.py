@@ -1,9 +1,8 @@
 import bpy
 from ..properties.gamerig import GAMERIG_PG_bone_retarget, GAMERIG_PG_game_rig
 
-
-class GAMERIG_OT_add_bone(bpy.types.Operator):
-    bl_idname = "gamerig.add_bone"
+class GAMERIG_OT_add_bone_target(bpy.types.Operator):
+    bl_idname = "gamerig.add_bone_target"
     bl_label = "Add Bone"
 
     bone_name: bpy.props.StringProperty(name="Bone")
