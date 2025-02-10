@@ -31,8 +31,8 @@ class GAMERIG_PG_game_rig(bpy.types.PropertyGroup):
 
 def register():
     bpy.types.Armature.gamerig = bpy.props.PointerProperty(type=GAMERIG_PG_game_rig)
-    bpy.types.Armature.gamerig_owner = bpy.props.PointerProperty(
-        name="Game Rig owner",
+    bpy.types.Armature.gamerig_source = bpy.props.PointerProperty(
+        name="Source Rig",
         type=bpy.types.Object,
         poll=lambda self, obj: obj.type
         == "ARMATURE",  # Limite la recherche aux objets de type 'ARMATURE'
@@ -42,5 +42,5 @@ def register():
 
 def unregister():
     del bpy.types.Armature.gamerig
-    del bpy.types.Armature.gamerig_owner
+    del bpy.types.Armature.gamerig_source
     pass

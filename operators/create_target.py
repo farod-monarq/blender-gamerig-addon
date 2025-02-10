@@ -23,7 +23,7 @@ class GAMERIG_OT_create_target(bpy.types.Operator):
         target_rig = create_empty_rig(
             context=context, name=f"{context.object.name}_target"
         )
-        target_rig.data.gamerig_owner = source_rig
+        target_rig.data.gamerig_source = source_rig
         # Sauvegarder la sélection actuelle et le mode
         original_object = context.object
         original_mode = bpy.context.object.mode

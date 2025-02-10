@@ -77,7 +77,7 @@ class GAMERIG_PT_source_rig_panel(bpy.types.Panel):
         if not (context.object or context.object.type == "ARMATURE"):
             return
 
-        if context.object.data.gamerig_owner:
+        if context.object.data.gamerig_source:
             return
 
         layout = self.layout
