@@ -1,5 +1,5 @@
 import bpy
-from .utils import create_retarget_settings
+from ..utils import create_retarget_settings
 from ..properties.gamerig import GAMERIG_PG_bone_retarget, GAMERIG_PG_game_rig
 
 class GAMERIG_OT_assign_collection_bones(bpy.types.Operator):

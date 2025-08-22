@@ -1,5 +1,5 @@
 import bpy
-from .utils import (
+from ..utils import (
     apply_bone_transform,
     constrain_bone,
     copy_bone,

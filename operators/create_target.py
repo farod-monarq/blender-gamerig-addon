@@ -1,5 +1,5 @@
 import bpy
-from .utils import constrain_bone, copy_bone, create_empty_rig
+from ..utils import constrain_bone, copy_bone, create_empty_rig
 from ..properties.gamerig import GAMERIG_PG_game_rig
 
 
