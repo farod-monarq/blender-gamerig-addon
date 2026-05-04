@@ -3,9 +3,9 @@ import bpy
 from ..properties.gamerig import GAMERIG_PG_game_rig
 
 
-class GAMERIG_OT_remove_bones_prefix(bpy.types.Operator):
-    bl_idname = "gamerig.remove_bones_prefix"
-    bl_label = "Remove Bone"
+class GAMERIG_OT_trim_bone_name_prefix(bpy.types.Operator):
+    bl_idname = "gamerig.trim_bone_name_prefix"
+    bl_label = "Trim bone name prefix"
 
     prefix_pattern: bpy.props.StringProperty(
         name="Prefix Pattern",

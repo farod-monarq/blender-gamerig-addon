@@ -20,9 +20,13 @@ class GAMERIG_OT_create_target(bpy.types.Operator):
         armature = context.object.data
         gamerig: GAMERIG_PG_game_rig = armature.gamerig
 
-        target_rig = create_empty_rig(
-            context=context, name=f"{context.object.name}_target"
-        )
+        new_rig_name = gamerig.target_rig_name
+        if len(new_rig_name) == 0 :
+            new_rig_name = f"{context.object.name}_target"
+            pass
+
+        target_rig = create_empty_rig(context=context, name=new_rig_name)
+        
         target_rig.data.gamerig_owner = source_rig
         # Sauvegarder la sélection actuelle et le mode
         original_object = context.object

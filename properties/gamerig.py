@@ -8,11 +8,12 @@ class GAMERIG_PG_bone_retarget(bpy.types.PropertyGroup):
     constraint: bpy.props.BoolProperty(name="Use Constraint", default=True)
     use_bone: bpy.props.BoolProperty(name="Use Bone", default=True)
     use_deform: bpy.props.BoolProperty(name="Use Deform", default=True)
-
+    preserve_bone:bpy.props.BoolProperty(name="Preserve Bone", default=False)
 
 class GAMERIG_PG_game_rig(bpy.types.PropertyGroup):
     """Conteneur pour les items de la collection de l'armature"""
 
+    target_rig_name:bpy.props.StringProperty(name="rig_name", default="")
     target_rig: bpy.props.PointerProperty(
         name="Target Rig",
         type=bpy.types.Object,

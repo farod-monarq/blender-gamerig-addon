@@ -12,11 +12,11 @@ def unregister():
 
 
 class GAMERIG_PT_source_rig_panel(bpy.types.Panel):
-    bl_label = "Game Rig Source"
+    bl_label = "Game Rig"
     bl_idname = __package__
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
-    bl_category = "Item"
+    bl_category = "Rigging"
 
     @classmethod
     def poll(cls, context):
@@ -34,7 +34,7 @@ class GAMERIG_PT_source_rig_panel(bpy.types.Panel):
     ):
         gamerig = rig_object.data.gamerig
         collection_header, collection_layout = layout.panel("gamerig.retargets")
-        collection_header.label(text="Bones")
+        collection_header.label(text="Bones Map")
         if collection_layout:
             row_list = collection_layout.row()
             row_list.template_list(
@@ -48,15 +48,20 @@ class GAMERIG_PT_source_rig_panel(bpy.types.Panel):
             col_list_action = row_list.column()
             col_list_action.operator("gamerig.add_bone_target", text="", icon="ADD")
             col_list_action.operator("gamerig.remove_bone", text="", icon="REMOVE")
-            # col_list_action.operator(
-            # 	"gamerig.", text="", icon="DOWNARROW_HLT"
-            # )
-            pass
+
+            col_list_action.operator("gamerig.trim_bone_name_prefix", text="", icon="TAG")
+            #if gamerig.target_rig:
+            #    col_list_action.operator("gamerig.update_target", text="", icon="FILE_REFRESH")
+            #    pass
+            #else:
+            #    col_list_action.operator("gamerig.create_target", text="", icon="FILE_REFRESH")
+            #    pass
+            #pass
         return
 
     def _draw_bone_collections(self, context, layout):
         collection_header, collection_layout = layout.panel("gamerig.collections")
-        collection_header.label(text="Bone Collections")
+        collection_header.label(text="Source")
         if collection_layout:
             collection_layout.template_list(
                 "GAMERIG_UL_bone_collection_list",
@@ -89,20 +94,21 @@ class GAMERIG_PT_source_rig_panel(bpy.types.Panel):
         self._draw_retarget_list(
             context=context, layout=layout, rig_object=context.object
         )
-        row = layout.row()
+
 
         if gamerig.target_rig:
-            row.operator("gamerig.update_target", icon="ARMATURE_DATA")
+            layout.operator("gamerig.update_target", text="Re-Generate", icon="FILE_REFRESH")
             pass
         else:
-            row.operator("gamerig.create_target", icon="ARMATURE_DATA")
+            layout.operator("gamerig.create_target", text="Generate Game Rig", icon="FILE_REFRESH")
             pass
 
-        row.operator("gamerig.remove_bones_prefix", text="", icon="TEXT")
+        layout.prop(gamerig, "target_rig_name", text="Rig Name")
 
         layout.prop_search(
             gamerig, "target_rig", bpy.data, "objects", text="", icon="CON_ARMATURE"
         )
+
         return
 
 
@@ -146,6 +152,14 @@ class GAMERIG_UL_bone_retarget_list(bpy.types.UIList):
                 emboss=False,
                 text="",
             )
+    
+            row.prop(
+                item,
+                "preserve_bone",
+                icon="LOCKED" if item.preserve_bone else "UNLOCKED",
+                emboss=False,
+                text="",
+            )
 
             pass
         elif self.layout_type == "GRID":
@@ -181,3 +195,5 @@ class GAMERIG_UL_bone_collection_list(bpy.types.UIList):
             layout.alignment = "CENTER"
             layout.label(text="", icon="GROUP_BONE")
             layout.prop(item, "is_active", text="")
+            pass
+        return

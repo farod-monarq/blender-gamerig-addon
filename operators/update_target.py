@@ -73,7 +73,9 @@ class GAMERIG_OT_update_target(bpy.types.Operator):
 
             # reparenter les bones
             for retarget in gamerig.bones:
-                copy_target_bone_parent(source_rig, target_rig, retarget, gamerig)
+                if retarget.preserve_bone == True :
+                    copy_target_bone_parent(source_rig, target_rig, retarget, gamerig)
+                    pass
                 pass
 
             # supprimer les bones inexistants
@@ -84,7 +86,7 @@ class GAMERIG_OT_update_target(bpy.types.Operator):
                         keep = True
                         break
                     pass
-                if not keep:
+                if not keep and retarget.preserve_bone == False :
                     target_edit_bones.remove(bone)
                     pass
                 pass
